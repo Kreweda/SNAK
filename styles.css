@@ -64,3 +64,43 @@ body {
     margin: 20px 0;
     font-size: 18px;
 }
+
+.battery-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 15px 0;
+}
+
+#battery-icon {
+    width: 50px;
+    height: 25px;
+    border: 2px solid white;
+    border-radius: 4px;
+    position: relative;
+    margin-right: 10px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+#battery-icon::after {
+    content: '';
+    width: 6px;
+    height: 12px;
+    background: white;
+    position: absolute;
+    top: 50%;
+    right: -8px;
+    transform: translateY(-50%);
+    border-radius: 2px;
+}
+
+#battery-level {
+    height: 100%;
+    width: 100%;
+    background: limegreen;
+    transition: width 0.3s ease;
+}
+
+#battery-text {
+    font-size: 16px;
+}

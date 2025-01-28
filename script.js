@@ -85,21 +85,43 @@ continueButton.addEventListener('click', () => {
 });
 
 // Obsługa latarki
+let isFlashlightOn = false; // Zmienna przechowująca stan latarki
+let activeTrack = null; // Przechowywanie ścieżki wideo dla latarki
+
 flashlightButton.addEventListener('click', () => {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        alert('Twoje urządzenie nie obsługuje latarki!');
+        return;
+    }
+
+    if (isFlashlightOn) {
+        // Wyłącz latarkę
+        if (activeTrack) {
+            activeTrack.applyConstraints({ advanced: [{ torch: false }] })
+                .catch(() => alert('Nie udało się wyłączyć latarki.'));
+            activeTrack.stop(); // Zatrzymanie ścieżki wideo
+            activeTrack = null;
+        }
+        isFlashlightOn = false;
+        flashlightButton.textContent = 'Włącz latarkę';
+    } else {
+        // Włącz latarkę
         navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
             .then(stream => {
                 const track = stream.getVideoTracks()[0];
                 if (track.getCapabilities().torch) {
                     track.applyConstraints({ advanced: [{ torch: true }] })
-                        .catch(() => alert('Twoje urządzenie nie obsługuje latarki!'));
+                        .then(() => {
+                            activeTrack = track; // Zapisanie aktywnej ścieżki
+                            isFlashlightOn = true;
+                            flashlightButton.textContent = 'Wyłącz latarkę';
+                        })
+                        .catch(() => alert('Nie udało się włączyć latarki.'));
                 } else {
                     alert('Latarka nie jest dostępna na tym urządzeniu.');
+                    track.stop();
                 }
             })
-            .catch(() => alert('Nie udało się włączyć latarki.'));
-    } else {
-        alert('Twoje urządzenie nie obsługuje latarki!');
+            .catch(() => alert('Nie udało się uzyskać dostępu do kamery.'));
     }
 });
-                                

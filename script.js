@@ -84,13 +84,29 @@ continueButton.addEventListener('click', () => {
     timeDisplay.textContent = '00:00';
 });
 
-// Obsługa latarki
+// Obsługa latarki i baterii
 let isFlashlightOn = false; // Zmienna przechowująca stan latarki
 let activeTrack = null; // Przechowywanie ścieżki wideo dla latarki
+let batteryLevel = 100; // Poziom baterii (w procentach)
+let batteryIntervalId = null;
+const flashlightDrainRate = 1000; // Czas (ms) na 1% zużycia baterii przy włączonej latarce
+const normalDrainRate = 5000; // Czas (ms) na 1% zużycia baterii przy wyłączonej latarce
+let batteryDrainRate = normalDrainRate;
+
+// Elementy DOM dla baterii
+const batteryDisplay = document.createElement('div');
+batteryDisplay.id = 'battery-display';
+batteryDisplay.textContent = `Bateria: ${batteryLevel}%`;
+document.body.appendChild(batteryDisplay);
 
 flashlightButton.addEventListener('click', () => {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         alert('Twoje urządzenie nie obsługuje latarki!');
+        return;
+    }
+
+    if (batteryLevel <= 0) {
+        alert('Bateria jest rozładowana! Latarka nie może być używana do końca nocy.');
         return;
     }
 
@@ -104,6 +120,7 @@ flashlightButton.addEventListener('click', () => {
         }
         isFlashlightOn = false;
         flashlightButton.textContent = 'Włącz latarkę';
+        batteryDrainRate = normalDrainRate;
     } else {
         // Włącz latarkę
         navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
@@ -115,6 +132,7 @@ flashlightButton.addEventListener('click', () => {
                             activeTrack = track; // Zapisanie aktywnej ścieżki
                             isFlashlightOn = true;
                             flashlightButton.textContent = 'Wyłącz latarkę';
+                            batteryDrainRate = flashlightDrainRate;
                         })
                         .catch(() => alert('Nie udało się włączyć latarki.'));
                 } else {
@@ -124,4 +142,51 @@ flashlightButton.addEventListener('click', () => {
             })
             .catch(() => alert('Nie udało się uzyskać dostępu do kamery.'));
     }
+});
+
+// Funkcja aktualizująca poziom baterii
+function updateBattery() {
+    batteryLevel--;
+    batteryDisplay.textContent = `Bateria: ${batteryLevel}%`;
+    if (batteryLevel <= 0) {
+        batteryLevel = 0;
+        clearInterval(batteryIntervalId);
+        if (isFlashlightOn) {
+            flashlightButton.click();
+        }
+        alert('Bateria jest rozładowana! Latarka nie działa do końca nocy.');
+    }
+}
+
+// Ustawienie interwału dla baterii
+function startBatteryDrain() {
+    if (batteryIntervalId) clearInterval(batteryIntervalId);
+    batteryIntervalId = setInterval(updateBattery, batteryDrainRate);
+}
+startBatteryDrain();
+
+// Dodanie przycisku "Atak zjawy - Koniec Gry"
+const attackButton = document.createElement('button');
+attackButton.id = 'attack-button';
+attackButton.textContent = 'Atak zjawy - Koniec Gry';
+attackButton.style.marginTop = '10px';
+document.body.appendChild(attackButton);
+
+attackButton.addEventListener('click', () => {
+    alert(`Zjawa zaatakowała! Rozpoczynasz ponownie noc ${currentNight}.`);
+    // Zatrzymaj zegar
+    if (intervalId) clearInterval(intervalId);
+    // Zatrzymaj baterię
+    if (batteryIntervalId) clearInterval(batteryIntervalId);
+    // Zresetuj czas i baterię
+    currentTime = 0;
+    batteryLevel = 100;
+    batteryDisplay.textContent = `Bateria: ${batteryLevel}%`;
+    timeDisplay.textContent = '00:00';
+    // Ukryj popup końca nocy (jeśli jest widoczny)
+    endPopup.classList.add('hidden');
+    // Ustaw tytuł bieżącej nocy
+    nightTitle.textContent = nightTitles[currentNight - 1];
+    // Rozpocznij drenaż baterii
+    startBatteryDrain();
 });

@@ -2,10 +2,11 @@ body {
     margin: 0;
     padding: 0;
     font-family: "Arial", sans-serif;
-    background: url('https://wallpapercave.com/wp/wp3349854.jpg') no-repeat center center fixed;
+    background: url('https://www.google.com/imgres?q=biuro%20fnaf%201&imgurl=https%3A%2F%2Fsteamuserimages-a.akamaihd.net%2Fugc%2F1303178815217229287%2FCA5F897500DF5B33433D33968503F4EE2481D635%2F%3Fimw%3D637%26imh%3D358%26ima%3Dfit%26impolicy%3DLetterbox%26imcolor%3D%2523000000%26letterbox%3Dtrue&imgrefurl=https%3A%2F%2Fsteamcommunity.com%2Fsharedfiles%2Ffiledetails%2F%3Fl%3Dpolish%26id%3D2147506595&docid=45Bi6Y69GCkW7M&tbnid=jClkzjkOskZirM&vet=12ahUKEwjPoefUkpiLAxVHJBAIHTB4KR8QM3oECBsQAA..i&w=637&h=358&hcb=2&ved=2ahUKEwjPoefUkpiLAxVHJBAIHTB4KR8QM3oECBsQAA') no-repeat center center fixed;
     background-size: cover;
     color: white;
     text-align: center;
+    
 }
 
 .game-container {

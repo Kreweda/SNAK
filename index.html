@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FNAF Clock</title>
+    <title>Fazmiś czeka</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -14,8 +14,15 @@
         <div class="clock">
             <span id="time-display">00:00</span>
         </div>
+        <div class="battery-container">
+            <div id="battery-icon">
+                <div id="battery-level"></div>
+            </div>
+            <span id="battery-text">100%</span>
+        </div>
         <button id="start-button" class="button">Start</button>
         <button id="flashlight-button" class="button">Latarka</button>
+        <button id="attack-button" class="button">Atak zjawy - Koniec Gry</button>
     </div>
 
     <div id="end-popup" class="popup hidden">
